@@ -1,0 +1,17 @@
+[
+  {
+    "Codigo": "t1",
+    "Nombre": "programacion",
+    "Precio": 100
+  },
+  {
+    "Codigo": "t2",
+    "Nombre": "Ingles",
+    "Precio": 120
+  },
+  {
+    "Codigo": "t3",
+    "Nombre": "Matematica",
+    "Precio": 150
+  }
+]
