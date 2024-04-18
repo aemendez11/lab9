@@ -10,7 +10,7 @@
     }
     else
     {
-        <select class=" form-select" aria-label="Default select example"@bind="@DpiAlumno">
+        <select class=" form-select" aria-label="Default select example" @bind="@DpiAlumno">
             <option selected>Seleccione al alumno</option>
             @foreach (var alumno in alumnos)
             {
@@ -41,19 +41,50 @@
     <button class="btn btn-primary" @onclick="GuardarInscripcion">Click me</button>
 </div>
 
+<div>
+    @if (inscripciones == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Dpi</th>
+                    <th>Fecha</th>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var incripcion  in inscripciones)
+                {
+                    <tr>
+                        <td>@incripcion.Codigo</td>
+                        <td>@incripcion.Dpi</td>
+                        <td>@incripcion.Fecha</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>  
+
+ 
+
 @code{
     List<Alumno> alumnos;
     List<Taller> talleres;
     List<Incripcion> inscripciones;
-
     string codigoTaller;
     string DpiAlumno;
     protected override async Task OnInitializedAsync()
     {
         alumnos = await Http.GetFromJsonAsync<List<Alumno>>("sample-data/Alumno.json");
         talleres = await Http.GetFromJsonAsync<List<Taller>>("sample-data/Taller.json");
+        //inscripciones = await Http.GetFromJsonAsync<List<Incripcion>>("");
+        inscripciones = await localStorage.GetItemAsync<List<Incripcion>>("inscripciones");
     }
 
     protected async Task GuardarInscripcion()
