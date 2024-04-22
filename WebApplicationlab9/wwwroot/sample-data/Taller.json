@@ -2,16 +2,16 @@
   {
     "Codigo": "t1",
     "Nombre": "programacion",
-    "Precio": 100
+    "Precio": 100.0
   },
   {
     "Codigo": "t2",
     "Nombre": "Ingles",
-    "Precio": 120
+    "Precio": 120.0
   },
   {
     "Codigo": "t3",
     "Nombre": "Matematica",
-    "Precio": 150
+    "Precio": 150.0
   }
 ]

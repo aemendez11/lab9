@@ -10,7 +10,7 @@
     }
     else
     {
-        <select class=" form-select" aria-label="Default select example" @bind="@DpiAlumno">
+        <select class=" form-select" aria-label="Default select example" @bind="@dpiAlumno">
             <option selected>Seleccione al alumno</option>
             @foreach (var alumno in alumnos)
             {
@@ -38,11 +38,11 @@
     }
 </div>
 <div>
-    <button class="btn btn-primary" @onclick="GuardarInscripcion">Click me</button>
+    <button class="btn btn-primary" @onclick="GuardarInscripcion">Inscribir alumno</button>
+    <button class="btn btn-secondary" @onclick="CrearReporte">Ver reportes</button>
 </div>
-
 <div>
-    @if (inscripciones == null)
+    @if (inscripciones==null)
     {
         <p><em>Loading...</em></p>
     }
@@ -54,48 +54,99 @@
                     <th>Codigo</th>
                     <th>Dpi</th>
                     <th>Fecha</th>
-
                 </tr>
             </thead>
             <tbody>
-                @foreach (var incripcion  in inscripciones)
+                @foreach (var inscripcion in inscripciones)
                 {
                     <tr>
-                        <td>@incripcion.Codigo</td>
-                        <td>@incripcion.Dpi</td>
-                        <td>@incripcion.Fecha</td>
+                        <td>@inscripcion.Codigo</td>
+                        <td>@inscripcion.Dpi</td>
+                        <td>@inscripcion.Fecha.ToShortDateString()</td>
                     </tr>
                 }
             </tbody>
         </table>
     }
-</div>  
+</div>
 
- 
+<div>
+    @if (reportes==null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Alumno</th>
+                    <th>Taller</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reporte in reportes)
+                {
+                    <tr>
+                        <td>@reporte.nombreAlumno</td>
+                        <td>@reporte.nombreTaller</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+
 
 @code{
     List<Alumno> alumnos;
     List<Taller> talleres;
     List<Incripcion> inscripciones;
+    List<Reporte> reportes = new List<Reporte>();
+
+
     string codigoTaller;
-    string DpiAlumno;
+    string dpiAlumno;
     protected override async Task OnInitializedAsync()
     {
         alumnos = await Http.GetFromJsonAsync<List<Alumno>>("sample-data/Alumno.json");
         talleres = await Http.GetFromJsonAsync<List<Taller>>("sample-data/Taller.json");
         //inscripciones = await Http.GetFromJsonAsync<List<Incripcion>>("");
         inscripciones = await localStorage.GetItemAsync<List<Incripcion>>("inscripciones");
+
+        if (inscripciones==null)
+        {
+            inscripciones = new List<Incripcion>();
+        }
+
     }
 
     protected async Task GuardarInscripcion()
     {
         Incripcion incripcion = new Incripcion();
         incripcion.Codigo = codigoTaller;
-        incripcion.Dpi = DpiAlumno;
+        incripcion.Dpi = dpiAlumno;
         incripcion.Fecha = DateTime.Now;
         inscripciones.Add(incripcion);
 
-        await localStorage.SetItemAsync("Inscripciones", "inscripciones");
+        await localStorage.SetItemAsync("inscripciones", inscripciones);
+    }
+    protected void CrearReporte()
+    {
+        foreach (var inscripcion in inscripciones)
+        {
+            Alumno alumno = alumnos.Find(a => a.Dpi == inscripcion.Dpi);
+            Taller taller = talleres.Find(t => t.Codigo == inscripcion.Codigo);
+
+            Reporte reporte = new Reporte();
+            reporte.nombreTaller = taller.Nombre;
+            reporte.nombreAlumno = alumno.Nombre;
+
+            reportes.Add(reporte);
+
+        }
     }
 
 }

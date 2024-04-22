@@ -7,12 +7,9 @@ namespace WebApplicationlab9
 {
     public class Alumno
     {
-        int dpi;
-        string nombre;
-        string direccion;
-
-        public int Dpi { get => dpi; set => dpi = value; }
-        public string Nombre { get => nombre; set => nombre = value; }
-        public string Direccion { get => direccion; set => direccion = value; }
+        public string Dpi { get; set; }
+        public string Nombre { get; set; }
+        public string Direccion { get;set; }
+ 
     }
 }
